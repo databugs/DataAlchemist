@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from telegram import Update
 from telegram.ext import ApplicationBuilder
 from os import getenv
@@ -138,14 +137,8 @@ conversation_handler = ConversationHandler(
     fallbacks=[CommandHandler('cancel', cancel)]
     , per_user=True
 )
-
-app = FastAPI()
 bot = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
 bot.add_handler(conversation_handler)
 
-@app.post("/webhook/{token}")
-async def telegram_webhook(token: str, update: Update):
-    await bot.process_update(update)
-
-bot.run_webhook(url_path="https://your-app.com/webhook/{token}")
+bot.run_polling()
